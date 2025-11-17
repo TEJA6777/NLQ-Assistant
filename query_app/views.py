@@ -170,21 +170,41 @@ def process_file_upload(file, request):
 def generate_sql_from_query(query, dataset):
     """Generate SQL query from natural language using Gemini AI."""
     try:
+        # Get all related tables in the same database group
+        user_filter = {'user': dataset.user} if dataset.user else {'user__isnull': True}
+        base_name = dataset.name.split('.')[0].rstrip('_0123456789')
+        related_datasets = Dataset.objects.filter(
+            name__startswith=base_name,
+            **user_filter
+        ).order_by('name')
+        
+        # Build context about all available tables
+        tables_context = "Available tables in this database:\n"
+        for ds in related_datasets:
+            tables_context += f"- Table: {ds.table_name}\n"
+            tables_context += f"  Columns: {', '.join([c['name'] for c in ds.columns])}\n"
+        
         sql_prompt = f"""
-        Convert this user request into a VALID SQLite SQL query.
+        You are a SQL expert. Convert the user's natural language request into a VALID SQLite query.
+        
+        CONTEXT - Database Structure:
+        {tables_context}
+        
+        Primary Table Information:
         - Table name: {dataset.table_name}
         - Columns: {', '.join([c['name'] for c in dataset.columns])}
-        - User request: "{query}"
         
-        Important notes:
-        1. For SELECT queries, return the data as requested.
-        2. For UPDATE, DELETE, INSERT, or ALTER operations, generate appropriate SQL.
-        3. Return ONLY the SQL query (no explanations).
-        4. Ensure the SQL is valid for SQLite.
-        5. Always quote table and column names with double quotes.
-        6. If showing the table, use: SELECT * FROM "{dataset.table_name}" LIMIT 10
-        7. For complex operations, separate statements with semicolons.
-        8. Do not include any text before the SQL.
+        User Request: "{query}"
+        
+        IMPORTANT RULES:
+        1. ONLY use the tables and columns listed above. Do not invent tables or columns.
+        2. For SELECT queries, return the requested data.
+        3. For UPDATE, DELETE, INSERT, or ALTER operations, generate appropriate SQL.
+        4. Always quote table names and column names with double quotes.
+        5. If the user asks to show/display the table, use: SELECT * FROM "{dataset.table_name}" LIMIT 10
+        6. For joins, only use tables that exist in the available tables list.
+        7. Return ONLY the SQL query - no explanations or markdown.
+        8. Ensure the SQL is valid for SQLite.
         """
         
         sql_model = genai.GenerativeModel('gemini-2.0-flash')
@@ -376,6 +396,42 @@ def clear_conversation(request):
             pass
     
     return redirect(f'/query/?dataset={request.POST.get("dataset")}' if request.POST.get('dataset') else '/query/')
+
+
+def delete_dataset(request):
+    """Delete a dataset and all its conversations."""
+    if request.method == 'POST':
+        dataset_id = request.POST.get('dataset_id')
+        user_filter = get_user_filter(request)
+        
+        try:
+            dataset = Dataset.objects.get(id=dataset_id, **user_filter)
+            table_name = dataset.table_name
+            
+            # Delete conversations first
+            Conversation.objects.filter(dataset=dataset).delete()
+            
+            # Drop the table from database
+            try:
+                with connection.cursor() as cursor:
+                    cursor.execute(f'DROP TABLE IF EXISTS "{table_name}"')
+                logger.info(f"Dropped table {table_name}")
+            except Exception as e:
+                logger.warning(f"Could not drop table {table_name}: {str(e)}")
+            
+            # Delete the dataset record
+            dataset.delete()
+            logger.info(f"Deleted dataset {dataset_id}")
+            
+            return JsonResponse({'success': True, 'message': f'Database "{dataset.name}" deleted successfully'})
+        except Dataset.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Database not found'})
+        except Exception as e:
+            logger.error(f"Delete error: {str(e)}")
+            return JsonResponse({'success': False, 'message': f'Error: {str(e)}'})
+    
+    return JsonResponse({'success': False, 'message': 'Invalid request'})
+
 
 
 def rename_dataset(request):

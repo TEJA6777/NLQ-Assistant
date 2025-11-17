@@ -9,5 +9,6 @@ urlpatterns = [
     path('process_query/', views.process_query, name='process_query'),
     path('query/', views.query_interface, name='query_interface'),
     path('clear_conversation/', views.clear_conversation, name='clear_conversation'),
+    path('delete_dataset/', views.delete_dataset, name='delete_dataset'),
     path('results/', views.query_results, name='query_results'),
 ]
