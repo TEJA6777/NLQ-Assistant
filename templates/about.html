@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}About - NLQ Assistant{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto">
+    <!-- Page Header -->
+    <div class="mb-12 py-8">
+        <h1 class="text-5xl font-bold text-slate-900 mb-4">About NLQ Assistant</h1>
+        <p class="text-xl text-slate-600">Democratizing data access through natural language</p>
+    </div>
+
+    <!-- Mission Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        <div>
+            <h2 class="text-3xl font-bold text-slate-900 mb-4">Our Mission</h2>
+            <p class="text-slate-600 mb-4 leading-relaxed">
+                We believe that data insights should be accessible to everyone, regardless of technical expertise. 
+                Our mission is to bridge the gap between complex databases and human curiosity by enabling natural 
+                language queries to data.
+            </p>
+            <p class="text-slate-600 leading-relaxed">
+                NLQ Assistant transforms how people interact with data—no SQL required, just plain English questions 
+                that get instant answers.
+            </p>
+        </div>
+        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-8 border border-blue-200">
+            <i class="fas fa-lightbulb text-5xl text-blue-600 mb-4"></i>
+            <h3 class="text-2xl font-bold text-slate-900 mb-3">Why We Built This</h3>
+            <p class="text-slate-600">
+                Traditional BI tools and database queries require extensive training. We wanted to make it simple—
+                ask a question, get an answer, no steep learning curve.
+            </p>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="mb-16">
+        <h2 class="text-3xl font-bold text-slate-900 mb-8">Key Features</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+                <i class="fas fa-comments text-3xl text-blue-600 mb-3"></i>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Natural Language</h3>
+                <p class="text-slate-600">Ask questions in plain English, not SQL</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+                <i class="fas fa-brain text-3xl text-purple-600 mb-3"></i>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">AI Powered</h3>
+                <p class="text-slate-600">Google Gemini AI converts language to queries</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+                <i class="fas fa-flash text-3xl text-orange-600 mb-3"></i>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Instant Results</h3>
+                <p class="text-slate-600">Get answers in milliseconds</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+                <i class="fas fa-upload text-3xl text-green-600 mb-3"></i>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Easy Upload</h3>
+                <p class="text-slate-600">CSV, Excel, and more formats supported</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+                <i class="fas fa-shield-alt text-3xl text-cyan-600 mb-3"></i>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Secure</h3>
+                <p class="text-slate-600">Your data stays on your server</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+                <i class="fas fa-database text-3xl text-indigo-600 mb-3"></i>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Multi-Database</h3>
+                <p class="text-slate-600">Manage multiple datasets simultaneously</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technology Stack -->
+    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-8 border border-blue-200 mb-16">
+        <h2 class="text-3xl font-bold text-slate-900 mb-6">Technology Stack</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div>
+                <h4 class="font-bold text-slate-900 mb-2">Backend</h4>
+                <ul class="text-slate-600 space-y-1">
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>Django</li>
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>Python</li>
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>SQLite</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-slate-900 mb-2">AI & ML</h4>
+                <ul class="text-slate-600 space-y-1">
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>Google Gemini</li>
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>Generative AI</li>
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>LLM</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-slate-900 mb-2">Data Processing</h4>
+                <ul class="text-slate-600 space-y-1">
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>Pandas</li>
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>SQLParse</li>
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>CSV/Excel</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-slate-900 mb-2">Frontend</h4>
+                <ul class="text-slate-600 space-y-1">
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>Tailwind CSS</li>
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>Django Templates</li>
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>JavaScript</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-12 text-center text-white">
+        <h2 class="text-3xl font-bold mb-4">Ready to Transform Your Data?</h2>
+        <p class="text-lg mb-6 opacity-90">Stop writing SQL. Start asking questions.</p>
+        <a href="{% url 'query_interface' %}" class="inline-block px-8 py-3 bg-white text-blue-600 rounded-lg font-bold hover:shadow-lg transition">
+            <i class="fas fa-rocket mr-2"></i> Get Started
+        </a>
+    </div>
+</div>
+{% endblock %}

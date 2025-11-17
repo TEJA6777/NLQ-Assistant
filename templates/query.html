@@ -1,172 +1,322 @@
 {% extends "base.html" %}
 
-{% block title %}NLQ Chat Interface - Query Assistant{% endblock %}
+{% block title %}Chat - NLQ Assistant{% endblock %}
+
+{% block extra_css %}
+<style>
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 140px);
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        overflow: hidden;
+    }
+
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .message {
+        animation: slideIn 0.3s ease-in-out;
+        display: flex;
+        gap: 12px;
+    }
+
+    .message.user {
+        justify-content: flex-end;
+    }
+
+    .message.bot {
+        justify-content: flex-start;
+    }
+
+    .message-content {
+        max-width: 70%;
+        padding: 12px 16px;
+        border-radius: 12px;
+        word-wrap: break-word;
+    }
+
+    .message.user .message-content {
+        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        color: white;
+    }
+
+    .message.bot .message-content {
+        background: #f1f5f9;
+        color: #1f2937;
+        border: 1px solid #e2e8f0;
+    }
+
+    .message-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        color: white;
+        font-size: 16px;
+    }
+
+    .message.user .message-icon {
+        background: #1e40af;
+    }
+
+    .message.bot .message-icon {
+        background: #0ea5e9;
+    }
+
+    .chat-input-area {
+        padding: 20px;
+        border-top: 1px solid #e2e8f0;
+        background: #f8fafc;
+    }
+
+    .input-group {
+        display: flex;
+        gap: 10px;
+    }
+
+    .input-group input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .input-group input:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .input-group button {
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .input-group button:hover {
+        box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
+    }
+
+    .input-group button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: #94a3b8;
+        text-align: center;
+    }
+
+    .empty-state i {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+
+    .result-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        margin: 12px 0;
+    }
+
+    .result-table thead {
+        background: linear-gradient(to right, #3b82f6, #2563eb);
+        color: white;
+    }
+
+    .result-table th {
+        padding: 12px 16px;
+        font-weight: 600;
+        text-align: left;
+    }
+
+    .result-table td {
+        padding: 10px 16px;
+        border-bottom: 1px solid #e2e8f0;
+        font-size: 13px;
+    }
+
+    .result-table tbody tr:hover {
+        background-color: #f0f9ff;
+    }
+
+    .result-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .no-database {
+        text-align: center;
+        color: #64748b;
+        padding: 40px;
+    }
+
+    .no-database i {
+        font-size: 48px;
+        color: #cbd5e1;
+        margin-bottom: 16px;
+    }
+
+    .upload-prompt {
+        background: linear-gradient(135deg, #fef2f2 0%, #fef5f5 100%);
+        border: 2px dashed #fed7aa;
+        border-radius: 8px;
+        padding: 24px;
+        text-align: center;
+        color: #92400e;
+    }
+
+    .upload-prompt i {
+        font-size: 32px;
+        margin-bottom: 12px;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .message-content {
+            max-width: 85%;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="flex h-screen overflow-hidden">
-    <!-- Left Sidebar - Databases & Tables -->
-    <div class="w-72 bg-white border-r border-slate-200 shadow-lg flex flex-col">
-        <!-- Logo/Header -->
-        <div class="p-6 border-b border-slate-200">
-            <div class="flex items-center gap-2 mb-1">
-                <i class="fas fa-database text-blue-600 text-xl"></i>
-                <h1 class="text-xl font-bold text-slate-800">NLQ Assistant</h1>
+<div class="max-w-7xl mx-auto">
+    {% if not current_dataset %}
+        <div class="bg-white rounded-xl shadow-md p-8 mt-8">
+            <div class="text-center">
+                <i class="fas fa-folder-open text-6xl text-blue-600 mb-4 opacity-50"></i>
+                <h2 class="text-2xl font-bold text-slate-900 mb-4">No Database Selected</h2>
+                <p class="text-slate-600 mb-6">Select a database from the left sidebar or upload a new one to start chatting.</p>
+                <a href="{% url 'query_interface' %}" class="inline-block px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold hover:shadow-lg transition">
+                    <i class="fas fa-cloud-upload-alt"></i> Upload Your First Dataset
+                </a>
             </div>
-            <p class="text-xs text-slate-500 mt-2">Natural Language Query Engine</p>
         </div>
+    {% else %}
+        <div class="chat-container">
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chat-messages">
+                {% if conversations %}
+                    {% for conv in conversations %}
+                        <div class="message user">
+                            <div class="message-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="message-content">
+                                {{ conv.user_query }}
+                            </div>
+                        </div>
 
-        <!-- Datasets Section -->
-        <div class="flex-1 overflow-y-auto scrollbar-hide">
-            <div class="p-4">
-                <h2 class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3 px-2">Databases & Tables</h2>
-                
-                {% if datasets %}
-                    {% for dataset in datasets %}
-                        <div class="mb-4 p-3 bg-slate-50 rounded-lg border {% if selected_dataset.id == dataset.id %}border-blue-500 bg-blue-50{% else %}border-slate-200{% endif %} transition">
-                            <a href="?dataset={{ dataset.id }}" class="flex items-start gap-2 cursor-pointer hover:opacity-80 transition">
-                                <i class="fas fa-table text-blue-600 mt-1 text-sm"></i>
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-slate-700 truncate">{{ dataset.name }}</p>
-                                    <p class="text-xs text-slate-500 truncate">Table: {{ dataset.table_name }}</p>
-                                </div>
-                            </a>
-                            <!-- Columns Preview -->
-                            <div class="mt-2 ml-6 space-y-1">
-                                {% for col in dataset.columns|slice:":5" %}
-                                    <div class="text-xs text-slate-600 flex items-center gap-1">
-                                        <i class="fas fa-circle text-blue-400" style="font-size: 0.35rem;"></i>
-                                        <span>{{ col.name }}</span>
+                        <div class="message bot">
+                            <div class="message-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-content">
+                                {% if conv.sql_query %}
+                                    <div style="margin-bottom: 8px; font-size: 12px; color: #64748b; background: white; padding: 8px; border-radius: 4px;">
+                                        <strong>SQL:</strong> {{ conv.sql_query }}
                                     </div>
-                                {% endfor %}
-                                {% if dataset.columns|length > 5 %}
-                                    <p class="text-xs text-slate-500 italic">+{{ dataset.columns|length|add:"-5" }} more columns</p>
                                 {% endif %}
+                                <div>{{ conv.response|safe }}</div>
                             </div>
                         </div>
                     {% endfor %}
                 {% else %}
-                    <div class="text-center py-8 text-slate-500">
-                        <i class="fas fa-inbox text-3xl mb-2 block text-slate-300"></i>
-                        <p class="text-sm">No datasets uploaded yet</p>
+                    <div class="empty-state">
+                        <i class="fas fa-comments"></i>
+                        <h3 class="text-lg font-semibold text-slate-600 mb-2">Start a Conversation</h3>
+                        <p>Ask a question about your data to get started!</p>
                     </div>
                 {% endif %}
             </div>
-        </div>
 
-        <!-- Bottom Action Buttons -->
-        <div class="p-4 border-t border-slate-200 space-y-2">
-            <button onclick="document.getElementById('upload-file-input').click()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm font-medium transition flex items-center justify-center gap-2">
-                <i class="fas fa-upload"></i> Upload Dataset
-            </button>
-            <input type="hidden" id="upload-file-input" />
-            {% if selected_dataset %}
-                <form method="post" action="{% url 'clear_conversation' %}" class="w-full">
+            <!-- Chat Input -->
+            <div class="chat-input-area">
+                <form method="post" action="{% url 'process_query' %}" id="query-form">
                     {% csrf_token %}
-                    <input type="hidden" name="dataset" value="{{ selected_dataset.id }}">
-                    <button type="submit" class="w-full bg-red-50 hover:bg-red-100 text-red-600 py-2 rounded-lg text-sm font-medium transition flex items-center justify-center gap-2">
-                        <i class="fas fa-trash"></i> Clear Chat
-                    </button>
+                    <input type="hidden" name="dataset" value="{{ current_dataset.id }}">
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            name="query" 
+                            placeholder="Ask something about your data... e.g., 'Show me all records' or 'Count records by city'"
+                            required
+                            autocomplete="off"
+                        >
+                        <button type="submit">
+                            <i class="fas fa-paper-plane"></i> Send
+                        </button>
+                    </div>
                 </form>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- Right Chat Area -->
-    <div class="flex-1 flex flex-col bg-white">
-        <!-- Top Bar -->
-        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-slate-200 flex items-center justify-between">
-            <div>
-                {% if selected_dataset %}
-                    <h2 class="text-lg font-semibold text-slate-800">{{ selected_dataset.name }}</h2>
-                    <p class="text-sm text-slate-600">Table: <code class="bg-slate-200 px-2 py-1 rounded text-xs">{{ selected_dataset.table_name }}</code></p>
-                {% else %}
-                    <h2 class="text-lg font-semibold text-slate-800">Select a Dataset</h2>
-                    <p class="text-sm text-slate-600">Choose a table from the left sidebar to start</p>
-                {% endif %}
             </div>
         </div>
 
-        <!-- Chat Box -->
-        <div id="chat-box" class="flex-1 overflow-y-auto scrollbar-hide p-6 space-y-4">
-            {% if conversations %}
-                {% for convo in conversations %}
-                    <!-- User Message -->
-                    <div class="flex justify-end chat-message">
-                        <div class="max-w-xl bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-3xl rounded-tr-sm px-4 py-3 shadow-md">
-                            <p class="text-sm">{{ convo.user_query }}</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Bot Message -->
-                    <div class="flex justify-start chat-message">
-                        <div class="max-w-2xl bg-slate-100 text-slate-800 rounded-3xl rounded-tl-sm px-4 py-3 shadow-md">
-                            <div class="text-sm prose prose-sm max-w-none">
-                                {{ convo.response|safe }}
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <div class="flex items-center justify-center h-full">
-                    <div class="text-center">
-                        <i class="fas fa-comments text-6xl text-slate-300 mb-4"></i>
-                        <p class="text-slate-600 text-lg font-medium mb-2">Start a Conversation</p>
-                        <p class="text-slate-500 text-sm">Ask natural language queries about your data</p>
-                    </div>
+        <!-- Current Dataset Info -->
+        <div class="mt-6 bg-white rounded-lg p-4 border border-blue-200 shadow-sm">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-table text-blue-600 text-lg"></i>
+                <div>
+                    <h4 class="font-semibold text-slate-900">{{ current_dataset.name }}</h4>
+                    <p class="text-sm text-slate-600">Table: <code>{{ current_dataset.table_name }}</code></p>
                 </div>
-            {% endif %}
+                <div class="ml-auto">
+                    <a href="{% url 'query_interface' %}" class="text-sm text-blue-600 hover:text-blue-700">Change Dataset</a>
+                </div>
+            </div>
         </div>
-
-        <!-- Input Area -->
-        <div class="border-t border-slate-200 p-4 bg-white">
-            <form id="query-form" method="post" action="{% url 'process_query' %}" enctype="multipart/form-data" class="flex gap-3">
-                {% csrf_token %}
-                
-                <!-- File Upload -->
-                <label for="file-input" class="flex items-center justify-center w-10 h-10 rounded-lg bg-slate-100 hover:bg-blue-100 cursor-pointer transition text-slate-600 hover:text-blue-600">
-                    <i class="fas fa-paperclip"></i>
-                </label>
-                <input id="file-input" type="file" name="file" accept=".csv,.xls,.xlsx" class="hidden" onchange="this.form.submit()">
-                
-                <!-- Query Input -->
-                <input 
-                    id="query-input" 
-                    type="text" 
-                    name="query" 
-                    placeholder="Ask anything about your data... e.g., 'Show me all customers from New York'"
-                    class="flex-1 px-4 py-2 rounded-lg bg-slate-100 text-slate-800 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition"
-                    required
-                    {% if not selected_dataset %}disabled{% endif %}
-                >
-                
-                {% if selected_dataset %}
-                    <input type="hidden" name="dataset" value="{{ selected_dataset.id }}">
-                {% endif %}
-                
-                <!-- Send Button -->
-                <button 
-                    type="submit"
-                    class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-2 rounded-lg font-medium transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                    {% if not selected_dataset %}disabled{% endif %}
-                >
-                    <i class="fas fa-paper-plane"></i> Send
-                </button>
-            </form>
-        </div>
-    </div>
+    {% endif %}
 </div>
 
 <script>
-    // Auto scroll to bottom of chat
-    const chatBox = document.getElementById('chat-box');
-    chatBox.scrollTop = chatBox.scrollHeight;
-    
-    // Show upload notification
-    document.getElementById('upload-file-input').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            alert('File selected: ' + file.name + '\nPlease use the paperclip icon in the chat to upload.');
-        }
+    // Auto-scroll to latest message
+    const chatMessages = document.getElementById('chat-messages');
+    if (chatMessages) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Handle form submission
+    document.getElementById('query-form')?.addEventListener('submit', function(e) {
+        const button = this.querySelector('button[type="submit"]');
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
     });
 </script>
 {% endblock %}

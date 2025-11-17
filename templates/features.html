@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}Features - NLQ Assistant{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto">
+    <!-- Page Header -->
+    <div class="mb-12 py-8">
+        <h1 class="text-5xl font-bold text-slate-900 mb-4">Powerful Features</h1>
+        <p class="text-xl text-slate-600">Everything you need to query your data naturally</p>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <!-- Feature 1 -->
+        <div class="bg-white p-8 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+            <div class="text-4xl text-blue-600 mb-4"><i class="fas fa-comments"></i></div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-3">Natural Language Queries</h3>
+            <p class="text-slate-600 mb-4">
+                Ask your data questions in plain English. No SQL knowledge required. Just type your question and get instant answers.
+            </p>
+            <ul class="space-y-2 text-sm text-slate-600">
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Simple syntax</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Complex queries supported</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Real-time results</li>
+            </ul>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="bg-white p-8 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+            <div class="text-4xl text-indigo-600 mb-4"><i class="fas fa-file-csv"></i></div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-3">Multi-Format Support</h3>
+            <p class="text-slate-600 mb-4">
+                Upload your data in various formats. We automatically detect structure and create organized tables.
+            </p>
+            <ul class="space-y-2 text-sm text-slate-600">
+                <li><i class="fas fa-check text-green-600 mr-2"></i>CSV files</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Excel spreadsheets</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Automatic column detection</li>
+            </ul>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="bg-white p-8 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+            <div class="text-4xl text-purple-600 mb-4"><i class="fas fa-brain"></i></div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-3">AI-Powered Intelligence</h3>
+            <p class="text-slate-600 mb-4">
+                Powered by Google Gemini AI, our system understands context and generates accurate SQL queries automatically.
+            </p>
+            <ul class="space-y-2 text-sm text-slate-600">
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Google Gemini 2.0</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Context understanding</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Smart conversions</li>
+            </ul>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="bg-white p-8 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+            <div class="text-4xl text-green-600 mb-4"><i class="fas fa-database"></i></div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-3">Multi-Database Management</h3>
+            <p class="text-slate-600 mb-4">
+                Upload and manage multiple datasets simultaneously. Switch between tables with ease for different analyses.
+            </p>
+            <ul class="space-y-2 text-sm text-slate-600">
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Multiple uploads</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Easy switching</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Organized sidebar</li>
+            </ul>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="bg-white p-8 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+            <div class="text-4xl text-cyan-600 mb-4"><i class="fas fa-table"></i></div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-3">Beautiful Data Visualization</h3>
+            <p class="text-slate-600 mb-4">
+                Results are displayed in clean, formatted tables. Easy to read, analyze, and understand your data insights.
+            </p>
+            <ul class="space-y-2 text-sm text-slate-600">
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Formatted tables</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Responsive design</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Easy to export</li>
+            </ul>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="bg-white p-8 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+            <div class="text-4xl text-orange-600 mb-4"><i class="fas fa-edit"></i></div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-3">Complete Data Operations</h3>
+            <p class="text-slate-600 mb-4">
+                Not just SELECT. Insert, update, delete, and modify your data using natural language commands.
+            </p>
+            <ul class="space-y-2 text-sm text-slate-600">
+                <li><i class="fas fa-check text-green-600 mr-2"></i>SELECT queries</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>INSERT, UPDATE, DELETE</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Data manipulation</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- How It Works -->
+    <section class="mb-16">
+        <h2 class="text-3xl font-bold text-slate-900 mb-8">How It Works</h2>
+        <div class="space-y-6">
+            <div class="flex gap-6 items-start">
+                <div class="flex-shrink-0 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg">1</div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Upload Your Data</h3>
+                    <p class="text-slate-600">
+                        Start by uploading a CSV or Excel file. The system automatically analyzes your data structure and creates organized database tables.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex gap-6 items-start">
+                <div class="flex-shrink-0 w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-lg">2</div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Ask in Natural Language</h3>
+                    <p class="text-slate-600">
+                        Type your questions in plain English. Ask about your data exactly as you would ask a colleague. No special syntax needed.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex gap-6 items-start">
+                <div class="flex-shrink-0 w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-lg">3</div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">AI Converts to SQL</h3>
+                    <p class="text-slate-600">
+                        Our AI instantly converts your natural language query into accurate SQL code and executes it on your data.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex gap-6 items-start">
+                <div class="flex-shrink-0 w-12 h-12 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-lg">4</div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Get Instant Results</h3>
+                    <p class="text-slate-600">
+                        Results are displayed in clean, formatted tables. See your data insights immediately and take action.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Supported Queries -->
+    <section class="bg-slate-50 rounded-xl p-8 border border-slate-200">
+        <h2 class="text-3xl font-bold text-slate-900 mb-8">Example Queries</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white p-4 rounded-lg border border-slate-200">
+                <p class="text-sm font-semibold text-blue-600 mb-2">SELECT Queries</p>
+                <ul class="space-y-2 text-sm text-slate-600">
+                    <li>• "Show me all customers"</li>
+                    <li>• "Get records from New York"</li>
+                    <li>• "Count users by city"</li>
+                    <li>• "Top 10 sales"</li>
+                </ul>
+            </div>
+            <div class="bg-white p-4 rounded-lg border border-slate-200">
+                <p class="text-sm font-semibold text-indigo-600 mb-2">Data Modification</p>
+                <ul class="space-y-2 text-sm text-slate-600">
+                    <li>• "Add a new record"</li>
+                    <li>• "Update user status"</li>
+                    <li>• "Delete inactive users"</li>
+                    <li>• "Rename this column"</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
