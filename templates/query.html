@@ -1,223 +1,172 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>NLQ Chat Interface</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            height: 100vh;
-            margin: 0;
-            background: linear-gradient(to bottom right, #f6f7fb, #e4e8f0);
-        }
+{% extends "base.html" %}
 
-        /* Left Sidebar */
-        #sidebar {
-            width: 20%;
-            background-color: #dce9f9;
-            padding: 20px;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+{% block title %}NLQ Chat Interface - Query Assistant{% endblock %}
 
-        #sidebar h2 {
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-
-        #sidebar button {
-            padding: 10px;
-            background-color: #0078ff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        #sidebar button:hover {
-            background-color: #005bb5;
-        }
-
-        /* Right Chat Area */
-        #chat-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Top Bar */
-        #top-bar {
-            display: flex;
-            justify-content: flex-end;
-            padding: 10px 20px;
-        }
-
-        #top-bar button {
-            padding: 8px 16px;
-            font-size: 14px;
-            background: #0078ff;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-
-        #top-bar button:hover {
-            background: #005bb5;
-        }
-
-        /* Chat box */
-        #chat-box {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px 30px;
-        }
-
-        .message {
-            margin: 12px 0;
-            padding: 14px 20px;
-            border-radius: 18px;
-            max-width: 70%;
-            font-size: 15px;
-            line-height: 1.5;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .user {
-            background: #2764f2;
-            color: white;
-            margin-left: auto;
-            border-bottom-right-radius: 4px;
-        }
-
-        .bot {
-            background: white;
-            color: #333;
-            margin-right: auto;
-            border-bottom-left-radius: 4px;
-            position: relative;
-            padding-left: 55px;
-        }
-
-        .bot::before {
-            content: '';
-            position: absolute;
-            top: 12px;
-            left: 15px;
-            width: 28px;
-            height: 28px;
-            background-image: url('data:image/svg+xml;utf8,<svg width="28" height="28" viewBox="0 0 24 24" fill="%2300469c" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12"/><path d="M8 9h8v6H8V9zm1 1v4h6v-4H9z" fill="white"/></svg>');
-            background-size: cover;
-            border-radius: 50%;
-        }
-
-        #query-form {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            background: #fff;
-            border-top: 1px solid #ccc;
-        }
-
-        #query-input {
-            flex: 1;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
-
-        #file-input {
-            display: none;
-        }
-
-        .attachment-icon {
-            cursor: pointer;
-            margin-right: 10px;
-            font-size: 22px;
-        }
-
-        button[type="submit"] {
-            padding: 10px 20px;
-            font-size: 16px;
-            background: #0078ff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-
-        button[type="submit"]:hover {
-            background: #005bb5;
-        }
-
-        .result-table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 10px;
-            background-color: white;
-        }
-
-        .result-table th, .result-table td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-        }
-
-        .result-table th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-    <div id="sidebar">
-        <div>
-            <h2>📂 Dataset</h2>
-            <p>{{ selected_dataset.name }}</p>
+{% block content %}
+<div class="flex h-screen overflow-hidden">
+    <!-- Left Sidebar - Databases & Tables -->
+    <div class="w-72 bg-white border-r border-slate-200 shadow-lg flex flex-col">
+        <!-- Logo/Header -->
+        <div class="p-6 border-b border-slate-200">
+            <div class="flex items-center gap-2 mb-1">
+                <i class="fas fa-database text-blue-600 text-xl"></i>
+                <h1 class="text-xl font-bold text-slate-800">NLQ Assistant</h1>
+            </div>
+            <p class="text-xs text-slate-500 mt-2">Natural Language Query Engine</p>
         </div>
-            <button type="submit">🕓 View History</button>
-        
+
+        <!-- Datasets Section -->
+        <div class="flex-1 overflow-y-auto scrollbar-hide">
+            <div class="p-4">
+                <h2 class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3 px-2">Databases & Tables</h2>
+                
+                {% if datasets %}
+                    {% for dataset in datasets %}
+                        <div class="mb-4 p-3 bg-slate-50 rounded-lg border {% if selected_dataset.id == dataset.id %}border-blue-500 bg-blue-50{% else %}border-slate-200{% endif %} transition">
+                            <a href="?dataset={{ dataset.id }}" class="flex items-start gap-2 cursor-pointer hover:opacity-80 transition">
+                                <i class="fas fa-table text-blue-600 mt-1 text-sm"></i>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium text-slate-700 truncate">{{ dataset.name }}</p>
+                                    <p class="text-xs text-slate-500 truncate">Table: {{ dataset.table_name }}</p>
+                                </div>
+                            </a>
+                            <!-- Columns Preview -->
+                            <div class="mt-2 ml-6 space-y-1">
+                                {% for col in dataset.columns|slice:":5" %}
+                                    <div class="text-xs text-slate-600 flex items-center gap-1">
+                                        <i class="fas fa-circle text-blue-400" style="font-size: 0.35rem;"></i>
+                                        <span>{{ col.name }}</span>
+                                    </div>
+                                {% endfor %}
+                                {% if dataset.columns|length > 5 %}
+                                    <p class="text-xs text-slate-500 italic">+{{ dataset.columns|length|add:"-5" }} more columns</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-8 text-slate-500">
+                        <i class="fas fa-inbox text-3xl mb-2 block text-slate-300"></i>
+                        <p class="text-sm">No datasets uploaded yet</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Bottom Action Buttons -->
+        <div class="p-4 border-t border-slate-200 space-y-2">
+            <button onclick="document.getElementById('upload-file-input').click()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm font-medium transition flex items-center justify-center gap-2">
+                <i class="fas fa-upload"></i> Upload Dataset
+            </button>
+            <input type="hidden" id="upload-file-input" />
+            {% if selected_dataset %}
+                <form method="post" action="{% url 'clear_conversation' %}" class="w-full">
+                    {% csrf_token %}
+                    <input type="hidden" name="dataset" value="{{ selected_dataset.id }}">
+                    <button type="submit" class="w-full bg-red-50 hover:bg-red-100 text-red-600 py-2 rounded-lg text-sm font-medium transition flex items-center justify-center gap-2">
+                        <i class="fas fa-trash"></i> Clear Chat
+                    </button>
+                </form>
+            {% endif %}
+        </div>
     </div>
 
-    <div id="chat-container">
-        <div id="top-bar">
-            <form method="post" action="{% url 'clear_conversation' %}">
+    <!-- Right Chat Area -->
+    <div class="flex-1 flex flex-col bg-white">
+        <!-- Top Bar -->
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+            <div>
+                {% if selected_dataset %}
+                    <h2 class="text-lg font-semibold text-slate-800">{{ selected_dataset.name }}</h2>
+                    <p class="text-sm text-slate-600">Table: <code class="bg-slate-200 px-2 py-1 rounded text-xs">{{ selected_dataset.table_name }}</code></p>
+                {% else %}
+                    <h2 class="text-lg font-semibold text-slate-800">Select a Dataset</h2>
+                    <p class="text-sm text-slate-600">Choose a table from the left sidebar to start</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Chat Box -->
+        <div id="chat-box" class="flex-1 overflow-y-auto scrollbar-hide p-6 space-y-4">
+            {% if conversations %}
+                {% for convo in conversations %}
+                    <!-- User Message -->
+                    <div class="flex justify-end chat-message">
+                        <div class="max-w-xl bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-3xl rounded-tr-sm px-4 py-3 shadow-md">
+                            <p class="text-sm">{{ convo.user_query }}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Bot Message -->
+                    <div class="flex justify-start chat-message">
+                        <div class="max-w-2xl bg-slate-100 text-slate-800 rounded-3xl rounded-tl-sm px-4 py-3 shadow-md">
+                            <div class="text-sm prose prose-sm max-w-none">
+                                {{ convo.response|safe }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="flex items-center justify-center h-full">
+                    <div class="text-center">
+                        <i class="fas fa-comments text-6xl text-slate-300 mb-4"></i>
+                        <p class="text-slate-600 text-lg font-medium mb-2">Start a Conversation</p>
+                        <p class="text-slate-500 text-sm">Ask natural language queries about your data</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Input Area -->
+        <div class="border-t border-slate-200 p-4 bg-white">
+            <form id="query-form" method="post" action="{% url 'process_query' %}" enctype="multipart/form-data" class="flex gap-3">
                 {% csrf_token %}
+                
+                <!-- File Upload -->
+                <label for="file-input" class="flex items-center justify-center w-10 h-10 rounded-lg bg-slate-100 hover:bg-blue-100 cursor-pointer transition text-slate-600 hover:text-blue-600">
+                    <i class="fas fa-paperclip"></i>
+                </label>
+                <input id="file-input" type="file" name="file" accept=".csv,.xls,.xlsx" class="hidden" onchange="this.form.submit()">
+                
+                <!-- Query Input -->
+                <input 
+                    id="query-input" 
+                    type="text" 
+                    name="query" 
+                    placeholder="Ask anything about your data... e.g., 'Show me all customers from New York'"
+                    class="flex-1 px-4 py-2 rounded-lg bg-slate-100 text-slate-800 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition"
+                    required
+                    {% if not selected_dataset %}disabled{% endif %}
+                >
+                
                 {% if selected_dataset %}
                     <input type="hidden" name="dataset" value="{{ selected_dataset.id }}">
                 {% endif %}
-                <button type="submit">Clear Conversation</button>
+                
+                <!-- Send Button -->
+                <button 
+                    type="submit"
+                    class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-2 rounded-lg font-medium transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    {% if not selected_dataset %}disabled{% endif %}
+                >
+                    <i class="fas fa-paper-plane"></i> Send
+                </button>
             </form>
         </div>
-
-        <div id="chat-box">
-            {% for convo in conversations %}
-                <div class="message user">{{ convo.user_query }}</div>
-                <div class="message bot">
-                    {{ convo.response|safe }}
-                </div>
-            {% endfor %}
-        </div>
-
-        <form id="query-form" method="post" action="{% url 'process_query' %}" enctype="multipart/form-data">
-            {% csrf_token %}
-            <label class="attachment-icon" for="file-input">📎</label>
-            <input id="file-input" type="file" name="file" accept=".csv,.xls,.xlsx" onchange="this.form.submit()">
-            <input id="query-input" type="text" name="query" placeholder="Type your question..." required>
-            {% if selected_dataset %}
-                <input type="hidden" name="dataset" value="{{ selected_dataset.id }}">
-            {% endif %}
-            <button type="submit">Send</button>
-        </form>
     </div>
+</div>
 
-    <script>
-        const chatBox = document.getElementById('chat-box');
-        chatBox.scrollTop = chatBox.scrollHeight;
-    </script>
-</body>
-</html>
+<script>
+    // Auto scroll to bottom of chat
+    const chatBox = document.getElementById('chat-box');
+    chatBox.scrollTop = chatBox.scrollHeight;
+    
+    // Show upload notification
+    document.getElementById('upload-file-input').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            alert('File selected: ' + file.name + '\nPlease use the paperclip icon in the chat to upload.');
+        }
+    });
+</script>
+{% endblock %}

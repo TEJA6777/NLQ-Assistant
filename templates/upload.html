@@ -1,5 +1,93 @@
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Upload & Process</button>
-</form>
+{% extends "base.html" %}
+
+{% block title %}Upload Dataset - NLQ Assistant{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center px-4">
+    <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+        <div class="text-center mb-8">
+            <i class="fas fa-cloud-upload-alt text-5xl text-blue-600 mb-4"></i>
+            <h1 class="text-3xl font-bold text-slate-900">Upload Dataset</h1>
+            <p class="text-slate-600 mt-2">Upload a CSV or Excel file to get started</p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-2">Select File</label>
+                <div class="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:border-blue-500 transition cursor-pointer" onclick="document.getElementById('file-input').click()">
+                    <i class="fas fa-file-csv text-3xl text-slate-400 mb-2 block"></i>
+                    <p class="text-slate-600 font-medium">Click to select file</p>
+                    <p class="text-sm text-slate-500">or drag and drop</p>
+                </div>
+                <input 
+                    id="file-input"
+                    type="file" 
+                    name="file" 
+                    accept=".csv,.xls,.xlsx"
+                    required
+                    class="hidden"
+                    onchange="updateFileName(this)"
+                >
+                <p id="file-name" class="text-sm text-slate-600 mt-2 text-center">No file selected</p>
+            </div>
+
+            <button 
+                type="submit"
+                class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 rounded-lg font-bold transition"
+            >
+                <i class="fas fa-upload mr-2"></i> Upload & Process
+            </button>
+
+            <div class="text-center">
+                <a href="{% url 'query_interface' %}" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                    ← Back to Chat
+                </a>
+            </div>
+        </form>
+
+        <div class="mt-8 pt-6 border-t border-slate-200">
+            <p class="text-xs text-slate-600 text-center mb-3 font-semibold">Supported Formats</p>
+            <div class="space-y-2 text-sm text-slate-600">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-check text-green-600"></i> CSV files
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-check text-green-600"></i> Excel files (.xls, .xlsx)
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-info-circle text-blue-600"></i> Max size: 10MB
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateFileName(input) {
+    const fileName = input.files[0]?.name || 'No file selected';
+    document.getElementById('file-name').textContent = fileName;
+}
+
+// Drag and drop
+const dropZone = document.querySelector('[ondrop]');
+document.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone?.classList.add('border-blue-500', 'bg-blue-50');
+}, false);
+
+document.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    dropZone?.classList.remove('border-blue-500', 'bg-blue-50');
+}, false);
+
+document.addEventListener('drop', (e) => {
+    e.preventDefault();
+    if (e.dataTransfer.files.length) {
+        document.getElementById('file-input').files = e.dataTransfer.files;
+        updateFileName(document.getElementById('file-input'));
+    }
+}, false);
+</script>
+{% endblock %}

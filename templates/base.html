@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NLQ Assistant{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .chat-message {
+            animation: slideIn 0.3s ease-in-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .table-row-hover:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+        
+        /* Result Table Styles */
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin: 12px 0;
+        }
+        
+        .result-table thead {
+            background: linear-gradient(to right, #3b82f6, #2563eb);
+            color: white;
+        }
+        
+        .result-table th {
+            padding: 12px 16px;
+            font-weight: 600;
+            text-align: left;
+            border: none;
+        }
+        
+        .result-table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .result-table tbody tr:hover {
+            background-color: #f0f9ff;
+        }
+        
+        .result-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Prose styling for bot messages */
+        .prose h1, .prose h2, .prose h3 {
+            color: #1f2937;
+            margin: 12px 0 8px 0;
+        }
+        
+        .prose p {
+            color: #374151;
+            margin: 8px 0;
+        }
+        
+        .prose code {
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #1f2937;
+            font-size: 0.875em;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100">
+    {% block content %}{% endblock %}
+</body>
+</html>
