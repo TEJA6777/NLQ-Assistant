@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NLQ Chatbot</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #6db3f2, #1e69de);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Nav */
+        .navbar {
+            display: flex;
+            padding: 20px 50px;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-right: 30px;
+            font-weight: 500;
+            font-size: 16px;
+            border-bottom: 2px solid transparent;
+        }
+        .navbar a:hover,
+        .navbar a.active {
+            border-bottom: 2px solid white;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: space-between;
+            padding: 60px 80px;
+        }
+
+        .hero-text {
+            max-width: 600px;
+        }
+        .hero-text h1 {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        .hero-text h3 {
+            font-weight: 400;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .hero-text p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .cta-button {
+            background-color: #00bfff;
+            color: white;
+            padding: 12px 28px;
+            border: none;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            background-color: #009fd1;
+        }
+
+        /* Placeholder for bot image */
+        .hero-image {
+            width: 280px;
+            height: 280px;
+            background: url('/static/images/chatbot.png') no-repeat center center;
+            background-size: contain;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+            .hero-image {
+                margin-top: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a class="active" href="#">Home</a>
+        <a href="#">Blog</a>
+        <a href="#">FAQ</a>
+        <a href="#">About Us</a>
+    </div>
+
+    <div class="hero">
+        <div class="hero-text">
+            <h1>NLQ AI Assistent</h1>
+            {% comment %} <h3>For your business</h3> {% endcomment %}
+            <p>Welcome to the Natural Language to SQL App. Upload your data and query it like you’re chatting with a human!</p>
+            <a class="cta-button" href="{% url 'query_interface' %}">Start Chat</a>
+        </div>
+        <div class="hero-image"></div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Query Results</title>
+</head>
+<body>
+    <h2>Generated SQL Query:</h2>
+    <pre>{{ sql_query }}</pre>
+
+    <h2>Query Results:</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                {% for col in columns %}
+                    <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in results %}
+                <tr>
+                    {% for cell in row %}
+                        <td>{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p><a href="{% url 'query_interface' %}">Ask Another Query</a></p>
+</body>
+</html>
