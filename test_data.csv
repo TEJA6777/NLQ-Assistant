@@ -1,0 +1,11 @@
+id,name,email,city,age,salary,department
+1,John Doe,john@example.com,New York,28,50000,Engineering
+2,Jane Smith,jane@example.com,Los Angeles,32,60000,Sales
+3,Mike Johnson,mike@example.com,Chicago,35,70000,Engineering
+4,Sarah Williams,sarah@example.com,Houston,29,55000,Marketing
+5,Tom Brown,tom@example.com,Phoenix,38,75000,Management
+6,Emily Davis,emily@example.com,Philadelphia,26,48000,Sales
+7,Robert Miller,robert@example.com,San Antonio,40,80000,Management
+8,Lisa Anderson,lisa@example.com,San Diego,30,62000,Engineering
+9,David Thomas,david@example.com,Dallas,31,58000,Marketing
+10,Jennifer Taylor,jen@example.com,San Jose,27,52000,Sales

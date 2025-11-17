@@ -10,7 +10,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from dotenv import load_dotenv
 from .models import Dataset, Conversation
-from .forms import NaturalLanguageQueryForm
+from .forms import NaturalLanguageQueryForm, DatasetUploadWithTargetForm
 
 
 load_dotenv()
@@ -135,8 +135,14 @@ def handle_special_queries(query, dataset_id, request):
     return None, None
 
 
-def process_file_upload(file, request):
-    """Handle file upload and create dataset."""
+def process_file_upload(file, request, target_table=None):
+    """Handle file upload and create dataset.
+    
+    Args:
+        file: Uploaded file object
+        request: Django request object
+        target_table: Optional existing table name to append to. If provided, data is added to existing table.
+    """
     try:
         if file.name.endswith('.csv'):
             df = pd.read_csv(file)
@@ -148,26 +154,48 @@ def process_file_upload(file, request):
         logger.error(f"File reading error: {str(e)}")
         return None, f"Error reading file: {str(e)}"
     
-    table_name = sanitize_table_name(file.name)
+    # If target_table provided, append to existing table; otherwise create new
+    if target_table:
+        table_name = target_table
+        mode = 'append'
+    else:
+        table_name = sanitize_table_name(file.name)
+        mode = 'replace'
+    
     columns = [{"name": col, "type": "TEXT"} for col in df.columns]
     
     try:
         with connection.cursor() as cursor:
             raw_conn = connection.connection
-            df.to_sql(table_name, raw_conn, if_exists='replace', index=False)
+            df.to_sql(table_name, raw_conn, if_exists=mode, index=False)
+            logger.info(f"Data {'appended to' if mode == 'append' else 'saved to'} table {table_name}")
     except Exception as e:
         logger.error(f"Database save error: {str(e)}")
         return None, f"Error saving to database: {str(e)}"
     
     try:
-        dataset = Dataset.objects.create(
-            user=request.user if request.user.is_authenticated else None,
-            name=file.name,
-            table_name=table_name,
-            columns=columns,
-            file=file
-        )
-        return dataset, None
+        if target_table:
+            # If appending to existing, just return the existing dataset
+            user_filter = get_user_filter(request)
+            dataset = Dataset.objects.filter(table_name=target_table, **user_filter).first()
+            if dataset:
+                # Update columns to reflect new data if needed
+                dataset.columns = columns
+                dataset.save()
+                logger.info(f"Updated existing dataset {dataset.id} with new data")
+                return dataset, None
+            else:
+                return None, f"Could not find target database"
+        else:
+            # Create new dataset
+            dataset = Dataset.objects.create(
+                user=request.user if request.user.is_authenticated else None,
+                name=file.name,
+                table_name=table_name,
+                columns=columns,
+                file=file
+            )
+            return dataset, None
     except Exception as e:
         logger.error(f"Dataset creation error: {str(e)}")
         return None, f"Error creating dataset: {str(e)}"
@@ -276,6 +304,8 @@ def process_query(request):
     # Handle file upload
     if 'file' in request.FILES:
         file = request.FILES['file']
+        upload_mode = request.POST.get('upload_mode', 'new')
+        target_database = request.POST.get('target_database', '').strip()
         
         # Validate file
         if not file:
@@ -284,7 +314,27 @@ def process_query(request):
         if file.size == 0:
             return HttpResponse("The uploaded file is empty. Please upload a valid file.", status=400)
         
-        dataset, error = process_file_upload(file, request)
+        # Handle target database selection
+        if upload_mode == 'existing' and target_database:
+            user_filter = get_user_filter(request)
+            # Find existing dataset with matching base name
+            existing_datasets = Dataset.objects.filter(**user_filter)
+            matching_dataset = None
+            
+            for ds in existing_datasets:
+                base_name = ds.name.split('.')[0].rstrip('_0123456789')
+                if base_name.lower() == target_database.lower():
+                    matching_dataset = ds
+                    break
+            
+            if not matching_dataset:
+                return HttpResponse(f"Database '{target_database}' not found. Please check the name.", status=400)
+            
+            # Upload to existing database's table
+            dataset, error = process_file_upload(file, request, target_table=matching_dataset.table_name)
+        else:
+            # Create new database
+            dataset, error = process_file_upload(file, request)
         
         if error:
             logger.error(f"Upload error: {error}")
@@ -410,7 +460,19 @@ def query_interface(request):
 
 def upload_dataset(request):
     """Display the upload dataset page."""
-    return render(request, 'upload.html')
+    user_filter = get_user_filter(request)
+    datasets = Dataset.objects.filter(**user_filter).values_list('name', flat=True).distinct()
+    
+    # Extract base database names
+    database_names = set()
+    for name in datasets:
+        base_name = name.split('.')[0].rstrip('_0123456789')
+        database_names.add(base_name)
+    
+    return render(request, 'upload.html', {
+        'existing_databases': sorted(list(database_names)),
+        'form': DatasetUploadWithTargetForm()
+    })
 
 
 def clear_conversation(request):
