@@ -14,7 +14,13 @@ from .forms import NaturalLanguageQueryForm
 
 
 load_dotenv()
-genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
+
+def configure_genai():
+    """Configure Gemini API with the key from environment."""
+    api_key = os.getenv('GEMINI_API_KEY')
+    if not api_key:
+        raise ValueError("GEMINI_API_KEY not found in environment variables")
+    genai.configure(api_key=api_key)
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -170,6 +176,8 @@ def process_file_upload(file, request):
 def generate_sql_from_query(query, dataset):
     """Generate SQL query from natural language using Gemini AI."""
     try:
+        configure_genai()  # Ensure API is configured
+        
         # Get all related tables in the same database group
         user_filter = {'user': dataset.user} if dataset.user else {'user__isnull': True}
         base_name = dataset.name.split('.')[0].rstrip('_0123456789')
@@ -219,6 +227,8 @@ def generate_sql_from_query(query, dataset):
 def generate_chat_response(query, dataset):
     """Generate a friendly chat response using Gemini AI."""
     try:
+        configure_genai()  # Ensure API is configured
+        
         conversation_prompt = f"""
         You are a friendly Natural Language Query assistant. Answer naturally and helpfully.
         If asked about your purpose, explain: "I help you query your data without writing SQL."
@@ -239,6 +249,8 @@ def generate_chat_response(query, dataset):
 def classify_query(query, dataset):
     """Classify query as SQL or CHAT using Gemini AI."""
     try:
+        configure_genai()  # Ensure API is configured
+        
         classification_prompt = f"""
         Classify this user message: "{query}"
         - Respond ONLY with "SQL" if it requests to SELECT, INSERT, UPDATE, DELETE, or ALTER data.
