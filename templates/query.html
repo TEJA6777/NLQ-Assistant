@@ -273,6 +273,7 @@
                 <form method="post" action="{% url 'process_query' %}" id="query-form">
                     {% csrf_token %}
                     <input type="hidden" name="dataset" value="{{ current_dataset.id }}">
+                    <input type="hidden" name="api_key" id="apiKeyInputHidden" value="">
                     <div class="input-group">
                         <input 
                             type="text" 
@@ -280,8 +281,9 @@
                             placeholder="Ask something about your data... e.g., 'Show me all records' or 'Count records by city'"
                             required
                             autocomplete="off"
+                            disabled
                         >
-                        <button type="submit">
+                        <button type="submit" disabled>
                             <i class="fas fa-paper-plane"></i> Send
                         </button>
                     </div>
@@ -298,8 +300,12 @@
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // Handle form submission
+    // Handle form submission - get API key from session storage
     document.getElementById('query-form')?.addEventListener('submit', function(e) {
+        // Get API key from sessionStorage and pass to hidden input
+        const apiKey = sessionStorage.getItem('gemini_api_key') || '';
+        document.getElementById('apiKeyInputHidden').value = apiKey;
+
         const button = this.querySelector('button[type="submit"]');
         button.disabled = true;
         button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';

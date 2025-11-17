@@ -1,0 +1,513 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if info_page == 'about' %}About - NLQ Assistant{% elif info_page == 'features' %}Features - NLQ Assistant{% elif info_page == 'contact' %}Contact - NLQ Assistant{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .info-section {
+        scroll-margin-top: 80px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto">
+    <!-- ============ ABOUT PAGE ============ -->
+    {% if info_page == 'about' %}
+    
+    <!-- Page Header -->
+    <div class="mb-12 py-8 info-section">
+        <h1 class="text-5xl font-bold text-slate-900 mb-4">About NLQ Assistant</h1>
+        <p class="text-xl text-slate-600">Democratizing data access through natural language</p>
+    </div>
+
+    <!-- Mission Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16 info-section">
+        <div>
+            <h2 class="text-3xl font-bold text-slate-900 mb-4">Our Mission</h2>
+            <p class="text-slate-600 mb-4 leading-relaxed">
+                We believe that data insights should be accessible to everyone, regardless of technical expertise. 
+                Our mission is to bridge the gap between complex databases and human curiosity by enabling natural 
+                language queries to data.
+            </p>
+            <p class="text-slate-600 leading-relaxed">
+                NLQ Assistant transforms how people interact with data—no SQL required, just plain English questions 
+                that get instant answers.
+            </p>
+        </div>
+        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-8 border border-blue-200">
+            <i class="fas fa-lightbulb text-5xl text-blue-600 mb-4"></i>
+            <h3 class="text-2xl font-bold text-slate-900 mb-3">Why We Built This</h3>
+            <p class="text-slate-600">
+                Traditional BI tools and database queries require extensive training. We wanted to make it simple—
+                ask a question, get an answer, no steep learning curve.
+            </p>
+        </div>
+    </div>
+
+    <!-- Key Features -->
+    <div class="mb-16 info-section">
+        <h2 class="text-3xl font-bold text-slate-900 mb-8">Key Features</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+                <i class="fas fa-comments text-3xl text-blue-600 mb-3"></i>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Natural Language</h3>
+                <p class="text-slate-600">Ask questions in plain English, not SQL</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+                <i class="fas fa-brain text-3xl text-purple-600 mb-3"></i>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">AI Powered</h3>
+                <p class="text-slate-600">Google Gemini AI converts language to queries</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+                <i class="fas fa-flash text-3xl text-orange-600 mb-3"></i>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Instant Results</h3>
+                <p class="text-slate-600">Get answers in milliseconds</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+                <i class="fas fa-upload text-3xl text-green-600 mb-3"></i>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Easy Upload</h3>
+                <p class="text-slate-600">CSV, Excel, and more formats supported</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+                <i class="fas fa-shield-alt text-3xl text-cyan-600 mb-3"></i>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Secure</h3>
+                <p class="text-slate-600">Your data stays on your server</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+                <i class="fas fa-database text-3xl text-indigo-600 mb-3"></i>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Multi-Database</h3>
+                <p class="text-slate-600">Manage multiple datasets simultaneously</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technology Stack -->
+    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-8 border border-blue-200 mb-16 info-section">
+        <h2 class="text-3xl font-bold text-slate-900 mb-6">Technology Stack</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div>
+                <h4 class="font-bold text-slate-900 mb-2">Backend</h4>
+                <ul class="text-slate-600 space-y-1">
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>Django</li>
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>Python</li>
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>SQLite</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-slate-900 mb-2">AI & ML</h4>
+                <ul class="text-slate-600 space-y-1">
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>Google Gemini</li>
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>Generative AI</li>
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>LLM</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-slate-900 mb-2">Data Processing</h4>
+                <ul class="text-slate-600 space-y-1">
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>Pandas</li>
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>SQLParse</li>
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>CSV/Excel</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-slate-900 mb-2">Frontend</h4>
+                <ul class="text-slate-600 space-y-1">
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>Tailwind CSS</li>
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>Django Templates</li>
+                    <li><i class="fas fa-check text-green-600 mr-2"></i>JavaScript</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-12 text-center text-white info-section">
+        <h2 class="text-3xl font-bold mb-4">Ready to Transform Your Data?</h2>
+        <p class="text-lg mb-6 opacity-90">Stop writing SQL. Start asking questions.</p>
+        <a href="{% url 'query_interface' %}" class="inline-block px-8 py-3 bg-white text-blue-600 rounded-lg font-bold hover:shadow-lg transition">
+            <i class="fas fa-rocket mr-2"></i> Get Started
+        </a>
+    </div>
+
+    <!-- ============ FEATURES PAGE ============ -->
+    {% elif info_page == 'features' %}
+    
+    <!-- Page Header -->
+    <div class="mb-12 py-8 info-section">
+        <h1 class="text-5xl font-bold text-slate-900 mb-4">Powerful Features</h1>
+        <p class="text-xl text-slate-600">Everything you need to query your data naturally</p>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 info-section">
+        <!-- Feature 1 -->
+        <div class="bg-white p-8 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+            <div class="text-4xl text-blue-600 mb-4"><i class="fas fa-comments"></i></div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-3">Natural Language Queries</h3>
+            <p class="text-slate-600 mb-4">
+                Ask your data questions in plain English. No SQL knowledge required. Just type your question and get instant answers.
+            </p>
+            <ul class="space-y-2 text-sm text-slate-600">
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Simple syntax</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Complex queries supported</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Real-time results</li>
+            </ul>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="bg-white p-8 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+            <div class="text-4xl text-indigo-600 mb-4"><i class="fas fa-file-csv"></i></div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-3">Multi-Format Support</h3>
+            <p class="text-slate-600 mb-4">
+                Upload your data in various formats. We automatically detect structure and create organized tables.
+            </p>
+            <ul class="space-y-2 text-sm text-slate-600">
+                <li><i class="fas fa-check text-green-600 mr-2"></i>CSV files</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Excel spreadsheets</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Automatic column detection</li>
+            </ul>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="bg-white p-8 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+            <div class="text-4xl text-purple-600 mb-4"><i class="fas fa-brain"></i></div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-3">AI-Powered Intelligence</h3>
+            <p class="text-slate-600 mb-4">
+                Powered by Google Gemini AI, our system understands context and generates accurate SQL queries automatically.
+            </p>
+            <ul class="space-y-2 text-sm text-slate-600">
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Google Gemini 2.0</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Context understanding</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Smart conversions</li>
+            </ul>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="bg-white p-8 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+            <div class="text-4xl text-green-600 mb-4"><i class="fas fa-database"></i></div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-3">Multi-Database Management</h3>
+            <p class="text-slate-600 mb-4">
+                Upload and manage multiple datasets simultaneously. Switch between tables with ease for different analyses.
+            </p>
+            <ul class="space-y-2 text-sm text-slate-600">
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Multiple uploads</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Easy switching</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Organized sidebar</li>
+            </ul>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="bg-white p-8 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+            <div class="text-4xl text-cyan-600 mb-4"><i class="fas fa-table"></i></div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-3">Beautiful Data Visualization</h3>
+            <p class="text-slate-600 mb-4">
+                Results are displayed in clean, formatted tables. Easy to read, analyze, and understand your data insights.
+            </p>
+            <ul class="space-y-2 text-sm text-slate-600">
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Formatted tables</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Responsive design</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Easy to export</li>
+            </ul>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="bg-white p-8 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition">
+            <div class="text-4xl text-orange-600 mb-4"><i class="fas fa-edit"></i></div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-3">Complete Data Operations</h3>
+            <p class="text-slate-600 mb-4">
+                Not just SELECT. Insert, update, delete, and modify your data using natural language commands.
+            </p>
+            <ul class="space-y-2 text-sm text-slate-600">
+                <li><i class="fas fa-check text-green-600 mr-2"></i>SELECT queries</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>INSERT, UPDATE, DELETE</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Data manipulation</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- How It Works -->
+    <section class="mb-16 info-section">
+        <h2 class="text-3xl font-bold text-slate-900 mb-8">How It Works</h2>
+        <div class="space-y-6">
+            <div class="flex gap-6 items-start">
+                <div class="flex-shrink-0 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg">1</div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Upload Your Data</h3>
+                    <p class="text-slate-600">
+                        Start by uploading a CSV or Excel file. The system automatically analyzes your data structure and creates organized database tables.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex gap-6 items-start">
+                <div class="flex-shrink-0 w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-lg">2</div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Ask in Natural Language</h3>
+                    <p class="text-slate-600">
+                        Type your questions in plain English. Ask about your data exactly as you would ask a colleague. No special syntax needed.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex gap-6 items-start">
+                <div class="flex-shrink-0 w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-lg">3</div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">AI Converts to SQL</h3>
+                    <p class="text-slate-600">
+                        Our AI instantly converts your natural language query into accurate SQL code and executes it on your data.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex gap-6 items-start">
+                <div class="flex-shrink-0 w-12 h-12 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-lg">4</div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Get Instant Results</h3>
+                    <p class="text-slate-600">
+                        Results are displayed in clean, formatted tables. See your data insights immediately and take action.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Supported Queries -->
+    <section class="bg-slate-50 rounded-xl p-8 border border-slate-200 info-section">
+        <h2 class="text-3xl font-bold text-slate-900 mb-8">Example Queries</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white p-4 rounded-lg border border-slate-200">
+                <p class="text-sm font-semibold text-blue-600 mb-2">SELECT Queries</p>
+                <ul class="space-y-2 text-sm text-slate-600">
+                    <li>• "Show me all customers"</li>
+                    <li>• "Get records from New York"</li>
+                    <li>• "Count users by city"</li>
+                    <li>• "Top 10 sales"</li>
+                </ul>
+            </div>
+            <div class="bg-white p-4 rounded-lg border border-slate-200">
+                <p class="text-sm font-semibold text-indigo-600 mb-2">Data Modification</p>
+                <ul class="space-y-2 text-sm text-slate-600">
+                    <li>• "Add a new record"</li>
+                    <li>• "Update user status"</li>
+                    <li>• "Delete inactive users"</li>
+                    <li>• "Rename this column"</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CONTACT PAGE ============ -->
+    {% elif info_page == 'contact' %}
+    
+    <!-- Page Header -->
+    <div class="mb-12 py-8 info-section">
+        <h1 class="text-5xl font-bold text-slate-900 mb-4">Get in Touch</h1>
+        <p class="text-xl text-slate-600">Have questions? We'd love to hear from you</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16 info-section">
+        <!-- Contact Form -->
+        <div class="bg-white p-8 rounded-xl shadow-md border border-slate-200">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6">Send us a Message</h2>
+            <form id="contact-form" class="space-y-6">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-slate-700 mb-2">Your Name</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        required
+                        class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="John Doe"
+                    >
+                </div>
+
+                <div>
+                    <label for="email" class="block text-sm font-medium text-slate-700 mb-2">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required
+                        class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="john@example.com"
+                    >
+                </div>
+
+                <div>
+                    <label for="subject" class="block text-sm font-medium text-slate-700 mb-2">Subject</label>
+                    <input 
+                        type="text" 
+                        id="subject" 
+                        name="subject" 
+                        required
+                        class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="How can we help?"
+                    >
+                </div>
+
+                <div>
+                    <label for="message" class="block text-sm font-medium text-slate-700 mb-2">Message</label>
+                    <textarea 
+                        id="message" 
+                        name="message" 
+                        rows="5"
+                        required
+                        class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Tell us your thoughts, questions, or feedback..."
+                    ></textarea>
+                </div>
+
+                <button 
+                    type="submit"
+                    class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition"
+                >
+                    <i class="fas fa-paper-plane mr-2"></i> Send Message
+                </button>
+            </form>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="space-y-8">
+            <!-- Info Card 1 -->
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-xl border border-blue-200">
+                <div class="flex items-start gap-4">
+                    <div class="text-3xl text-blue-600">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">Email</h3>
+                        <p class="text-slate-600">support@nlqassistant.com</p>
+                        <p class="text-sm text-slate-500 mt-1">We'll respond within 24 hours</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Card 2 -->
+            <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-8 rounded-xl border border-purple-200">
+                <div class="flex items-start gap-4">
+                    <div class="text-3xl text-purple-600">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">Chat Support</h3>
+                        <p class="text-slate-600">Available on our platform</p>
+                        <p class="text-sm text-slate-500 mt-1">Live chat support for users</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Card 3 -->
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-xl border border-green-200">
+                <div class="flex items-start gap-4">
+                    <div class="text-3xl text-green-600">
+                        <i class="fas fa-github"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">GitHub</h3>
+                        <a href="https://github.com/TEJA6777/NLQ-Assistant" target="_blank" class="text-slate-600 hover:text-blue-600 transition">github.com/TEJA6777/NLQ-Assistant</a>
+                        <p class="text-sm text-slate-500 mt-1">Open source project - contribute today</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Card 4 -->
+            <div class="bg-gradient-to-br from-orange-50 to-red-50 p-8 rounded-xl border border-orange-200">
+                <div class="flex items-start gap-4">
+                    <div class="text-3xl text-orange-600">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">Location</h3>
+                        <p class="text-slate-600">India</p>
+                        <p class="text-sm text-slate-500 mt-1">Building the future of data access</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <section class="mb-16 info-section">
+        <h2 class="text-3xl font-bold text-slate-900 mb-8">Frequently Asked Questions</h2>
+        <div class="space-y-4">
+            <details class="group bg-white border border-slate-200 rounded-lg p-6 cursor-pointer hover:shadow-md transition">
+                <summary class="flex items-center justify-between font-semibold text-slate-900">
+                    <span>Is my data secure?</span>
+                    <i class="fas fa-chevron-down group-open:rotate-180 transition"></i>
+                </summary>
+                <p class="text-slate-600 mt-4">
+                    Yes, your data is secure. All data is stored locally on your server. We only use the Google Gemini API for query generation, and no data is sent to external servers except for the query text.
+                </p>
+            </details>
+
+            <details class="group bg-white border border-slate-200 rounded-lg p-6 cursor-pointer hover:shadow-md transition">
+                <summary class="flex items-center justify-between font-semibold text-slate-900">
+                    <span>What file formats are supported?</span>
+                    <i class="fas fa-chevron-down group-open:rotate-180 transition"></i>
+                </summary>
+                <p class="text-slate-600 mt-4">
+                    We support CSV and Excel files (.xls, .xlsx). The system automatically detects the structure and creates appropriate database tables.
+                </p>
+            </details>
+
+            <details class="group bg-white border border-slate-200 rounded-lg p-6 cursor-pointer hover:shadow-md transition">
+                <summary class="flex items-center justify-between font-semibold text-slate-900">
+                    <span>Can I upload multiple datasets?</span>
+                    <i class="fas fa-chevron-down group-open:rotate-180 transition"></i>
+                </summary>
+                <p class="text-slate-600 mt-4">
+                    Yes! You can upload multiple datasets and manage them simultaneously. Simply use the Upload Dataset button in the sidebar to add more databases.
+                </p>
+            </details>
+
+            <details class="group bg-white border border-slate-200 rounded-lg p-6 cursor-pointer hover:shadow-md transition">
+                <summary class="flex items-center justify-between font-semibold text-slate-900">
+                    <span>What if my query is complex?</span>
+                    <i class="fas fa-chevron-down group-open:rotate-180 transition"></i>
+                </summary>
+                <p class="text-slate-600 mt-4">
+                    Our AI is powered by Google Gemini, which can handle complex queries. You can ask for aggregations, filtering, grouping, joins, and more - all in natural language.
+                </p>
+            </details>
+
+            <details class="group bg-white border border-slate-200 rounded-lg p-6 cursor-pointer hover:shadow-md transition">
+                <summary class="flex items-center justify-between font-semibold text-slate-900">
+                    <span>Is there a cost?</span>
+                    <i class="fas fa-chevron-down group-open:rotate-180 transition"></i>
+                </summary>
+                <p class="text-slate-600 mt-4">
+                    NLQ Assistant is open source and free to use. You only pay for Google Gemini API usage, which is very affordable for most use cases.
+                </p>
+            </details>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-12 text-center text-white info-section">
+        <h2 class="text-3xl font-bold mb-4">Have More Questions?</h2>
+        <p class="text-lg mb-6 opacity-90">Check our documentation or reach out to the team</p>
+        <div class="flex gap-4 justify-center flex-wrap">
+            <a href="{% url 'home' %}" class="inline-block px-8 py-3 bg-white text-blue-600 rounded-lg font-bold hover:shadow-lg transition">
+                <i class="fas fa-home mr-2"></i> Back to Home
+            </a>
+            <a href="{% url 'features' %}" class="inline-block px-8 py-3 bg-blue-700 text-white rounded-lg font-bold hover:shadow-lg transition border border-blue-600">
+                <i class="fas fa-sparkles mr-2"></i> View Features
+            </a>
+        </div>
+    </div>
+
+    {% endif %}
+</div>
+
+<script>
+    document.getElementById('contact-form')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Thank you for your message! We will get back to you soon.');
+        this.reset();
+    });
+</script>
+{% endblock %}

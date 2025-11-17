@@ -15,12 +15,12 @@ from .forms import NaturalLanguageQueryForm, DatasetUploadWithTargetForm
 
 load_dotenv()
 
-def configure_genai():
-    """Configure Gemini API with the key from environment."""
-    api_key = os.getenv('GEMINI_API_KEY')
-    if not api_key:
-        raise ValueError("GEMINI_API_KEY not found in environment variables")
-    genai.configure(api_key=api_key)
+def configure_genai(api_key=None):
+    """Configure Gemini API with provided key or from environment."""
+    key = api_key if api_key else os.getenv('GEMINI_API_KEY')
+    if not key:
+        raise ValueError("No API key provided. Please provide your Gemini API key through the popup modal.")
+    genai.configure(api_key=key)
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -201,34 +201,22 @@ def process_file_upload(file, request, target_table=None):
         return None, f"Error creating dataset: {str(e)}"
 
 
-def generate_sql_from_query(query, dataset):
+def generate_sql_from_query(query, dataset, api_key=None):
     """Generate SQL query from natural language using Gemini AI."""
     try:
-        configure_genai()  # Ensure API is configured
+        configure_genai(api_key=api_key)  # Use provided API key or default
         
-        # Get all related tables in the same database group
-        user_filter = {'user': dataset.user} if dataset.user else {'user__isnull': True}
-        base_name = dataset.name.split('.')[0].rstrip('_0123456789')
-        related_datasets = Dataset.objects.filter(
-            name__startswith=base_name,
-            **user_filter
-        ).order_by('name')
-        
-        # Build context about all available tables
-        tables_context = "Available tables in this database:\n"
-        for ds in related_datasets:
-            tables_context += f"- Table: {ds.table_name}\n"
-            tables_context += f"  Columns: {', '.join([c['name'] for c in ds.columns])}\n"
+        # Get database context using helper function
+        db_context = get_database_context(dataset)
+        formatted_context = format_database_context(db_context)
         
         sql_prompt = f"""
         You are a SQL expert. Convert the user's natural language request into a VALID SQLite query.
         
-        CONTEXT - Database Structure:
-        {tables_context}
+        AVAILABLE DATABASE STRUCTURE:
+        {formatted_context}
         
-        Primary Table Information:
-        - Table name: {dataset.table_name}
-        - Columns: {', '.join([c['name'] for c in dataset.columns])}
+        Primary Table: {dataset.table_name}
         
         User Request: "{query}"
         
@@ -252,16 +240,85 @@ def generate_sql_from_query(query, dataset):
         raise e
 
 
-def generate_chat_response(query, dataset):
-    """Generate a friendly chat response using Gemini AI."""
+def get_database_context(dataset):
+    """Build database context information from dataset."""
+    user_filter = {'user': dataset.user} if dataset.user else {'user__isnull': True}
+    base_name = dataset.name.split('.')[0].rstrip('_0123456789')
+    related_datasets = Dataset.objects.filter(
+        name__startswith=base_name,
+        **user_filter
+    ).order_by('name')
+    
+    context = {
+        'database_name': base_name,
+        'table_count': related_datasets.count(),
+        'tables': []
+    }
+    
+    for ds in related_datasets:
+        table_info = {
+            'name': ds.table_name,
+            'columns': [c['name'] for c in ds.columns]
+        }
+        context['tables'].append(table_info)
+    
+    return context
+
+
+def format_database_context(context):
+    """Format database context for display in prompts."""
+    formatted = f"Available Database: {context['database_name']}\n"
+    formatted += f"Total Tables: {context['table_count']}\n\n"
+    formatted += "Tables and their columns:\n"
+    
+    for idx, table in enumerate(context['tables'], 1):
+        formatted += f"{idx}. Table '{table['name']}': "
+        formatted += f"{', '.join(table['columns'])}\n"
+    
+    return formatted
+
+
+def generate_chat_response(query, dataset, api_key=None):
+    """Generate a friendly chat response using Gemini AI with database context."""
     try:
-        configure_genai()  # Ensure API is configured
+        configure_genai(api_key=api_key)
         
-        conversation_prompt = f"""
-        You are a friendly Natural Language Query assistant. Answer naturally and helpfully.
-        If asked about your purpose, explain: "I help you query your data without writing SQL."
-        User: "{query}"
-        """
+        # Get database context
+        db_context = get_database_context(dataset)
+        formatted_context = format_database_context(db_context)
+        
+        # Check if user is asking about database structure
+        structure_keywords = ['table', 'column', 'structure', 'schema', 'database', 'how many']
+        is_structure_question = any(keyword.lower() in query.lower() for keyword in structure_keywords)
+        
+        if is_structure_question:
+            # For structure questions, include detailed database info
+            conversation_prompt = f"""
+            You are a helpful database assistant. The user is asking about the database structure.
+            
+            DATABASE INFORMATION:
+            {formatted_context}
+            
+            User Question: "{query}"
+            
+            Provide accurate information about the database structure based on the information above.
+            Be helpful and specific.
+            """
+        else:
+            # For general questions, don't mention specific tables
+            conversation_prompt = f"""
+            You are a friendly assistant helping users query their database.
+            
+            USER: "{query}"
+            
+            Guidelines:
+            - Be helpful and friendly
+            - Don't mention specific table names unless asked
+            - If asked about database structure, you can provide details
+            - Encourage users to ask questions about their data
+            
+            Provide a helpful response:
+            """
         
         chat_model = genai.GenerativeModel('gemini-2.0-flash')
         response = chat_model.generate_content(
@@ -274,10 +331,10 @@ def generate_chat_response(query, dataset):
         return f"<p>Sorry, I couldn't process that. Error: {str(e)}</p>"
 
 
-def classify_query(query, dataset):
+def classify_query(query, dataset, api_key=None):
     """Classify query as SQL or CHAT using Gemini AI."""
     try:
-        configure_genai()  # Ensure API is configured
+        configure_genai(api_key=api_key)  # Use provided API key or default
         
         classification_prompt = f"""
         Classify this user message: "{query}"
@@ -353,6 +410,7 @@ def process_query(request):
     
     query = form.cleaned_data['query'].strip()
     dataset_id = request.POST.get('dataset')
+    api_key = request.POST.get('api_key', '').strip()  # Get API key from form
     user_filter = get_user_filter(request)
     
     if not query:
@@ -383,10 +441,10 @@ def process_query(request):
         return redirect(f'/query/?dataset={dataset_id}' if dataset_id else '/query/')
     
     # Classify and process query
-    classification = classify_query(query, dataset)
+    classification = classify_query(query, dataset, api_key=api_key)
     
     if classification == "CHAT":
-        bot_response = generate_chat_response(query, dataset)
+        bot_response = generate_chat_response(query, dataset, api_key=api_key)
         Conversation.objects.create(
             dataset=dataset,
             user_query=query,
@@ -395,7 +453,7 @@ def process_query(request):
         )
     else:  # SQL
         try:
-            sql_query = generate_sql_from_query(query, dataset)
+            sql_query = generate_sql_from_query(query, dataset, api_key=api_key)
             sql_statements = [stmt.strip() for stmt in sql_query.split(';') if stmt.strip()]
             
             is_read_op, results, columns, total_affected = execute_sql_statements(sql_statements)
@@ -569,14 +627,14 @@ def query_results(request):
 
 def about(request):
     """About page view."""
-    return render(request, 'about.html')
+    return render(request, 'info.html', {'info_page': 'about'})
 
 
 def features(request):
     """Features page view."""
-    return render(request, 'features.html')
+    return render(request, 'info.html', {'info_page': 'features'})
 
 
 def contact(request):
     """Contact page view."""
-    return render(request, 'contact.html')
+    return render(request, 'info.html', {'info_page': 'contact'})
