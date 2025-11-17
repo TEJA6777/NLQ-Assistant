@@ -264,11 +264,24 @@ def process_query(request):
     # Handle file upload
     if 'file' in request.FILES:
         file = request.FILES['file']
+        
+        # Validate file
+        if not file:
+            return HttpResponse("No file selected. Please upload a CSV or Excel file.", status=400)
+        
+        if file.size == 0:
+            return HttpResponse("The uploaded file is empty. Please upload a valid file.", status=400)
+        
         dataset, error = process_file_upload(file, request)
         
         if error:
-            return HttpResponse(error, status=400)
+            logger.error(f"Upload error: {error}")
+            return HttpResponse(f"Upload failed: {error}", status=400)
         
+        if not dataset:
+            return HttpResponse("Failed to create dataset. Please try again.", status=500)
+        
+        logger.info(f"Successfully uploaded dataset: {dataset.name} (ID: {dataset.id})")
         return redirect(f'/query/?dataset={dataset.id}&new_upload=true')
     
     # Handle natural language query
@@ -381,6 +394,11 @@ def query_interface(request):
         'conversations': conversations,
         'query_form': query_form
     })
+
+
+def upload_dataset(request):
+    """Display the upload dataset page."""
+    return render(request, 'upload.html')
 
 
 def clear_conversation(request):

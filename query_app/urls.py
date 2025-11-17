@@ -6,6 +6,7 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('features/', views.features, name='features'),
     path('contact/', views.contact, name='contact'),
+    path('upload/', views.upload_dataset, name='upload_dataset'),
     path('process_query/', views.process_query, name='process_query'),
     path('query/', views.query_interface, name='query_interface'),
     path('clear_conversation/', views.clear_conversation, name='clear_conversation'),
