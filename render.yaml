@@ -3,15 +3,14 @@ services:
     name: nlq-assistant
     env: python
     plan: free
-    root: ./
     buildCommand: bash build.sh
     startCommand: gunicorn nlq_project.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: DEBUG
-        value: false
+        value: "false"
       - key: PYTHON_VERSION
-        value: 3.11.4
+        value: "3.11"
       - key: GEMINI_API_KEY
         sync: false
       - key: ALLOWED_HOSTS
-        value: "*.onrender.com,localhost"
+        value: "*.onrender.com,localhost,127.0.0.1"
