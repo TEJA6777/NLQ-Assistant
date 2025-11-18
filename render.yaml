@@ -3,7 +3,8 @@ services:
     name: nlq-assistant
     env: python
     plan: free
-    buildCommand: ./build.sh
+    root: ./
+    buildCommand: bash build.sh
     startCommand: gunicorn nlq_project.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: DEBUG
