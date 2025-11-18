@@ -7,13 +7,13 @@
 # ============================================================================
 # Core Framework
 # ============================================================================
-Django==3.2.20
+Django==4.2.6
 python-dotenv==1.0.0
 
 # ============================================================================
 # Data Processing
 # ============================================================================
-pandas==1.5.3
+pandas==2.1.1
 openpyxl==3.10.10  # For Excel file support
 sqlparse==0.4.4
 
@@ -27,36 +27,21 @@ google-generativeai==0.3.0
 # ============================================================================
 # SQLite is built-in with Django
 # For PostgreSQL support (optional):
-# psycopg2-binary==2.9.7
+psycopg2-binary==2.9.9
 
 # ============================================================================
-# Development Dependencies (optional)
+# Production Deployment
 # ============================================================================
-# Uncomment for development:
-# black==23.7.0           # Code formatter
-# flake8==6.0.0          # Linter
-# pytest==7.4.0          # Testing framework
-# pytest-django==4.5.2   # Django testing utilities
-# django-debug-toolbar==4.1.0  # Debug toolbar
+gunicorn==21.2.0       # WSGI HTTP Server
+whitenoise==6.6.0      # Static file serving
+dj-database-url==2.1.0 # Database URL parsing
+django-cors-headers==4.2.0  # CORS support
 
-# ============================================================================
-# Production Deployment (optional)
-# ============================================================================
-# Uncomment when deploying:
-# gunicorn==21.2.0       # WSGI HTTP Server
-# whitenoise==6.5.0      # Static file serving
-# dj-database-url==1.3.0 # Database URL parsing
-
-# ============================================================================
-# Security (optional but recommended)
-# ============================================================================
-# django-cors-headers==4.2.0  # CORS support
-# django-extensions==3.2.3    # Management commands
 
 # ============================================================================
 # Notes
 # ============================================================================
 # Python 3.8+ required
 # See README.md for detailed installation instructions
-# For production, add more security-related packages
+# For production, review all security settings in settings.py
 # ============================================================================

@@ -9,6 +9,10 @@ Your `.env.example` contains an exposed API key! Follow these steps immediately:
 
 ### Replace the exposed API key in `.env.example`:
 ```bash
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2a8f426 (uploading into rendering)
 # To this:
 GEMINI_API_KEY=your_actual_api_key_here_get_from_google_ai_dev
 ```

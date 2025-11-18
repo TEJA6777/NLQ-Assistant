@@ -638,3 +638,83 @@ def features(request):
 def contact(request):
     """Contact page view."""
     return render(request, 'info.html', {'info_page': 'contact'})
+
+
+def visualize_data(request):
+    """Visualize data from datasets with tables and charts."""
+    user_filter = get_user_filter(request)
+    datasets = Dataset.objects.filter(**user_filter).order_by('name')
+    grouped_datasets = group_datasets_by_name(datasets)
+    
+    dataset_id = request.GET.get('dataset')
+    selected_dataset = None
+    table_data = []
+    columns = []
+    data_stats = {}
+    chart_data = {}
+    
+    if dataset_id:
+        try:
+            selected_dataset = Dataset.objects.get(id=dataset_id, **user_filter)
+            
+            # Fetch data from the database
+            with connection.cursor() as cursor:
+                cursor.execute(f'SELECT * FROM "{selected_dataset.table_name}" LIMIT 1000')
+                rows = cursor.fetchall()
+                columns = [col[0] for col in cursor.description] if cursor.description else []
+                
+                # Convert to list of dicts for template
+                table_data = [dict(zip(columns, row)) for row in rows]
+            
+            # Calculate statistics
+            with connection.cursor() as cursor:
+                # Count total records
+                cursor.execute(f'SELECT COUNT(*) FROM "{selected_dataset.table_name}"')
+                total_records = cursor.fetchone()[0]
+                
+                data_stats['total_records'] = total_records
+                data_stats['total_columns'] = len(columns)
+                
+                # Try to get numeric columns for statistics
+                numeric_data = {}
+                for col in selected_dataset.columns:
+                    if col.get('type') in ['INTEGER', 'REAL', 'FLOAT']:
+                        col_name = col['name']
+                        try:
+                            cursor.execute(f'SELECT MIN("{col_name}"), MAX("{col_name}"), AVG("{col_name}") FROM "{selected_dataset.table_name}"')
+                            min_val, max_val, avg_val = cursor.fetchone()
+                            numeric_data[col_name] = {
+                                'min': round(float(min_val), 2) if min_val else 0,
+                                'max': round(float(max_val), 2) if max_val else 0,
+                                'avg': round(float(avg_val), 2) if avg_val else 0
+                            }
+                        except:
+                            pass
+                
+                data_stats['numeric_columns'] = numeric_data
+                
+                # Get first text column for value counts (for pie/bar chart)
+                text_columns = [col['name'] for col in selected_dataset.columns if col.get('type') not in ['INTEGER', 'REAL', 'FLOAT', 'DATE', 'DATETIME']]
+                if text_columns and len(table_data) > 0:
+                    first_text_col = text_columns[0]
+                    cursor.execute(f'SELECT "{first_text_col}", COUNT(*) FROM "{selected_dataset.table_name}" GROUP BY "{first_text_col}" LIMIT 10')
+                    distribution = cursor.fetchall()
+                    if distribution:
+                        chart_data['distribution_column'] = first_text_col
+                        chart_data['distribution_labels'] = [str(row[0]) for row in distribution]
+                        chart_data['distribution_values'] = [int(row[1]) for row in distribution]
+        
+        except Dataset.DoesNotExist:
+            selected_dataset = datasets.first() if datasets.exists() else None
+    elif datasets.exists():
+        selected_dataset = datasets.first()
+    
+    return render(request, 'visualize.html', {
+        'datasets': datasets,
+        'grouped_datasets': grouped_datasets,
+        'current_dataset': selected_dataset,
+        'table_data': table_data,
+        'columns': columns,
+        'data_stats': data_stats,
+        'chart_data': chart_data
+    })
