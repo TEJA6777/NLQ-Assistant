@@ -411,6 +411,12 @@ def process_query(request):
     query = form.cleaned_data['query'].strip()
     dataset_id = request.POST.get('dataset')
     api_key = request.POST.get('api_key', '').strip()  # Get API key from form
+    # Log whether an API key was provided (masked to avoid leaking secrets)
+    if api_key:
+        masked_key = '***' + api_key[-6:]
+    else:
+        masked_key = 'NONE'
+    logger.info("API key provided in POST (masked): %s", masked_key)
     user_filter = get_user_filter(request)
     
     if not query:
